@@ -19,6 +19,7 @@ class mysql::server ($mysql_profile="") {
 		"/home/mysql/mysql" :
 			ensure => directory,
 			recurse => true,
+			replace => false,
 			require => File["/home/mysql"],
 			owner => "mysql",
 			group => "mysql",
@@ -41,7 +42,7 @@ class mysql::server ($mysql_profile="") {
 		ensure => running,
 		hasstatus => true,
 		require => Package["mysql-server"],
-		subscribe  => [ Package["mysql-server"], File["/etc/mysql/conf.d/${mysql_profile}.cnf"] ],
+		subscribe  => [ Package["mysql-server"], File["/etc/mysql/conf.d/${mysql_profile}.cnf"], File["/home/mysql/mysql"] ],
 	}
 
     case $operatingsystem {
