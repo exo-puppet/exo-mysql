@@ -15,6 +15,14 @@ class mysql::server ($mysql_profile="") {
 			owner => "mysql",
 			group => "mysql";
 	}
+ 	file {
+		"/home/mysql/mysql" :
+			ensure => directory,
+			require => File["/home/mysql"],
+			owner => "mysql",
+			group => "mysql",
+			source => "/var/lib/mysql/mysql";
+	}
 				
 	if ( $mysql_profile != "" ) {		
 	    file {
