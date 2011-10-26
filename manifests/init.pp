@@ -18,6 +18,7 @@ class mysql::server ($mysql_profile="") {
  	file {
 		"/home/mysql/mysql" :
 			ensure => directory,
+			recurse => true,
 			require => File["/home/mysql"],
 			owner => "mysql",
 			group => "mysql",
