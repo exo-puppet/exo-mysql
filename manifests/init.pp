@@ -2,57 +2,82 @@
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
 
-class mysql::server ($mysql_tunning="false",$mysql_max_connections=100,$mysql_innodb_buffer_pool_size="2G",$mysql_data_dir="") {
+class mysql::server ($mysql_tunning="false",$mysql_max_connections=100,$mysql_innodb_buffer_pool_size="2G",$mysql_data_dir="/var/lib/mysql") {
 
 	package { "mysql-server":
 		ensure => installed,
 	}
 				
 	# Use another data directory			
-	if ( $mysql_data_dir != "" ) {
-		# Copy the mysql system database
-	 	file {
-			"$mysql_data_dir/mysql" :
-				ensure => directory,
-				recurse => true,
-				owner => "mysql",
-				group => "mysql",
-				source => "/var/lib/mysql/mysql",
-				require => Package["mysql-server"];
+	if ( $mysql_data_dir != "/var/lib/mysql" ) {
+		Exec { path => "/bin:/sbin:/usr/bin:/usr/sbin" }
+		# Create the new directory
+		file {"$mysql_data_dir":
+            ensure => directory,
+            owner   => mysql,
+            group   => mysql,
+			require => [Package["mysql-server"]],
+        }		
+		# Move the mysql database
+		exec{"move-mysql-db":
+			command => "mv /var/lib/mysql/mysql $mysql_data_dir", 
+			require => [File["$mysql_data_dir"]],
+			onlyif => "test ! -d $mysql_data_dir/mysql",
 		}
-		# Configure mysql to use the new data directory
-	    file {
-	        "/etc/mysql/conf.d/relocation.cnf":
-	            ensure  => file,
-	            owner   => root,
-	            group   => root,
-	            mode    => 440,
-	            content => template("${module_name}/relocation.cnf.erb"),
-	            require => Package["mysql-server"],
-	            notify => Service[mysql]
-	    }
-	    # On ubuntu update apparmor
+		# Rename the original directory
+		exec{"rename-mysql-dir":
+			command => "mv /var/lib/mysql /var/lib/mysql.ori",
+			onlyif => "test -d /var/lib/mysql", 
+			require => [Exec["move-mysql-db"]],
+		}		
+		# Create a symlink
+		file {"/var/lib/mysql":
+            ensure => symlink,
+            owner   => mysql,
+            group   => mysql,
+            target => "$mysql_data_dir",
+            require => [Exec["rename-mysql-dir"]],
+        }
+        # On ubuntu update apparmor
         case $operatingsystem {
-	      'ubuntu':  { 
-			service { apparmor:
-				ensure => running,
-				hasstatus => true,
-			}
-		    file {
-		        "/etc/apparmor.d/usr.sbin.mysqld":
-		            ensure  => file,
-		            owner   => root,
-		            group   => root,
-		            mode    => 644,
-		            content => template("${module_name}/usr.sbin.mysqld.erb"),
-		            require => Package["mysql-server"],
-		            notify => Service["mysql","apparmor"]
-			    }
-		      }
-		      default:  { } # apply the generic class
-		    }
-		}
+             'ubuntu':  { 
+                   file {
+                       "/etc/apparmor.d/usr.sbin.mysqld":
+                           ensure  => file,
+                           owner   => root,
+                           group   => root,
+                           mode    => 644,
+                           content => template("${module_name}/usr.sbin.mysqld.erb"),
+                           require => [Package["mysql-server"],Exec["move-mysql-db"]],
+                           notify => Service["apparmor"]
+                   }
+                   service { apparmor:
+                           ensure => running,
+                           hasstatus => true,
+                   }                   
+              }
+              default:  { 
+              } # apply the generic class
+        }
+        # Configure mysql to use the new data directory
+        file {
+            "/etc/mysql/conf.d/relocation.cnf":
+               ensure  => file,
+               owner   => root,
+               group   => root,
+               mode    => 440,
+               content => template("${module_name}/relocation.cnf.erb"),
+               require => [File["/var/lib/mysql"],File["/etc/apparmor.d/usr.sbin.mysqld"]],
+               notify => Service[mysql]
+        }        
+    }
 	if ( $mysql_tunning == "true" ) {		
+		# Remove log file as we maybe changed the size
+		exec{"remove-log":
+			command => "rm $mysql_data_dir/ib_logfile*",
+			onlyif => "test -f $mysql_data_dir/ib_logfile0", 
+			require => [File["/var/lib/mysql"]],
+		}	    
 	    file {
 	        "/etc/mysql/conf.d/tunning.cnf":
 	            ensure  => file,
@@ -68,19 +93,9 @@ class mysql::server ($mysql_tunning="false",$mysql_max_connections=100,$mysql_in
 	service { mysql:
 		ensure => running,
 		hasstatus => true,
-		require => Package["mysql-server"],
-		subscribe  => [ Package["mysql-server"] ],
+		require => [Package["mysql-server"],File["/etc/mysql/conf.d/tunning.cnf"],File["/var/lib/mysql"]],
+		subscribe  => [ Package["mysql-server"], Exec["remove-log"] ],
 	}
-
-    case $operatingsystem {
-      'ubuntu':  { 
-		    # mysql defaults
-		    Mysql_database { defaults => "/etc/mysql/debian.cnf" }
-		    Mysql_user { defaults => "/etc/mysql/debian.cnf" }
-		    Mysql_grant { defaults => "/etc/mysql/debian.cnf" }	
-      } # apply the debian class
-      default:  { } # apply the generic class
-    }
 
 	# Collect all databases and users
 	Mysql_database<<||>>
