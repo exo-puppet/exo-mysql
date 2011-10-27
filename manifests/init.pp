@@ -68,16 +68,9 @@ class mysql::server ($mysql_data_dir="/var/lib/mysql",$mysql_tunning="false",$my
                mode    => 440,
                content => template("${module_name}/relocation.cnf.erb"),
                require => [File["/var/lib/mysql"],File["/etc/apparmor.d/usr.sbin.mysqld"]],
-               notify => Service[mysql]
         }        
     }
 	if ( $mysql_tunning == "true" ) {		
-		# Remove log file as we maybe changed the size
-		exec{"remove-log":
-			command => "rm $mysql_data_dir/ib_logfile*",
-			onlyif => "test -f $mysql_data_dir/ib_logfile0", 
-			require => [File["/var/lib/mysql"]],
-		}	    
 	    file {
 	        "/etc/mysql/conf.d/tunning.cnf":
 	            ensure  => file,
@@ -86,15 +79,18 @@ class mysql::server ($mysql_data_dir="/var/lib/mysql",$mysql_tunning="false",$my
 	            mode    => 440,
 	            content => template("${module_name}/tunning.cnf.erb"),
 	            require => Package["mysql-server"],
-	            notify => Service[mysql]
 	    }
+		# Remove log file as we maybe changed the size
+		exec{"remove-log":
+			command => "rm $mysql_data_dir/ib_logfile*",
+			require => [File["/etc/mysql/conf.d/tunning.cnf"]],
+		}	    
     }
 
 	service { mysql:
 		ensure => running,
 		hasstatus => true,
 		require => [Package["mysql-server"],File["/etc/mysql/conf.d/tunning.cnf"],File["/var/lib/mysql"]],
-		subscribe  => [ Package["mysql-server"], Exec["remove-log"] ],
 	}
 
 	# Collect all databases and users
