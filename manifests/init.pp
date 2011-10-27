@@ -27,7 +27,7 @@ class mysql::server ($mysql_data_dir="/var/lib/mysql",$mysql_tunning="false",$my
 		# Rename the original directory
 		exec{"rename-mysql-dir":
 			command => "mv /var/lib/mysql /var/lib/mysql.ori",
-			onlyif => "test -d /var/lib/mysql", 
+			onlyif => "test (! -h /var/lib/mysql) -a (-d /var/lib/mysql) -a (! -d /var/lib/mysql.ori)", 
 			require => [Exec["move-mysql-db"]],
 		}		
 		# Create a symlink
