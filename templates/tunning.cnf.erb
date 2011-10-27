@@ -2,7 +2,7 @@
  # Dedicated MySQL configuration for acceptance server
  #
  [mysqld_safe]
-timezone        = Europe/Paris
+timezone        = <%= mysql_timezone %>
  
  [mysqld]
 default-storage-engine=INNODB
@@ -21,7 +21,7 @@ skip-external-locking
 # buffer pool size < 80% of your RAM
 key_buffer_size=256M
  
-bind-address		= 0.0.0.0
+bind-address		= <%= mysql_bind_address %>
 
 #
 # * Fine Tuning

@@ -2,7 +2,7 @@
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
 
-class mysql::server ($mysql_tunning="false",$mysql_max_connections=100,$mysql_innodb_buffer_pool_size="2G",$mysql_data_dir="/var/lib/mysql") {
+class mysql::server ($mysql_data_dir="/var/lib/mysql",$mysql_tunning="false",$mysql_max_connections=100,$mysql_innodb_buffer_pool_size="2G",$mysql_bind_address="127.0.0.1",$mysql_timezone="Europe/Paris") {
 
 	package { "mysql-server":
 		ensure => installed,
