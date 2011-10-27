@@ -1,0 +1,82 @@
+ #
+ # Dedicated MySQL configuration for acceptance server
+ #
+ [mysqld_safe]
+timezone        = Europe/Paris
+ 
+ [mysqld]
+default-storage-engine=INNODB
+
+# Encoding
+default-character-set=utf8
+init-connect='SET NAMES utf8'
+character-set-server=utf8
+collation-server=utf8_general_ci
+skip-character-set-client-handshake
+skip-external-locking
+
+#
+# Set key_buffer to 5 - 50% of your RAM depending on how much
+# you use MyISAM tables, but keep key_buffer_size + InnoDB
+# buffer pool size < 80% of your RAM
+key_buffer_size=256M
+ 
+bind-address		= 0.0.0.0
+
+#
+# * Fine Tuning
+#
+thread_cache_size       = 32
+set-variable = max_connections=<%= mysql_max_connections %>
+max_connections=<%= mysql_max_connections %>
+read_buffer_size=1M
+read_rnd_buffer_size=64M
+sort_buffer_size=256K
+table_cache=512 
+thread_concurrency=8 
+
+#
+# * Query Cache Configuration
+#
+query_cache_type = 1
+query_cache_size = 256M
+query_cache_limit = 128M
+query_cache_min_res_unit = 4K
+
+
+#
+# * InnoDB
+#
+# InnoDB is enabled by default with a 10MB datafile in /var/lib/mysql/.
+# Read the manual for more InnoDB related options. There are many!
+#
+bulk_insert_buffer_size=32M
+join_buffer_size=8M
+max_heap_table_size=256M
+tmp_table_size=256M
+max_tmp_tables=48
+
+#
+# Set buffer pool size to 50-80% of your computer's memory,
+# but make sure on Linux x86 total memory usage is < 2GB
+innodb_buffer_pool_size=<%= mysql_innodb_buffer_pool_size %>
+innodb_additional_mem_pool_size=20M
+#
+# Set the log file size to about 25% of the buffer pool size
+innodb_log_file_size=512M
+innodb_log_buffer_size=32M
+#
+innodb_flush_log_at_trx_commit=2
+innodb_log_buffer_size=64M
+innodb_log_file_size=256M
+innodb_lock_wait_timeout=90
+innodb_flush_method=O_DIRECT
+innodb_rollback_on_timeout=3
+#
+# Uncomment the next line if you want to use it
+innodb_thread_concurrency=8
+#
+innodb_file_per_table=1
+
+# http://confluence.atlassian.com/display/CROWD/MySQL
+transaction-isolation = READ-COMMITTED
