@@ -89,7 +89,6 @@ class mysql::server ($mysql_data_dir="/var/lib/mysql",$mysql_tunning="false",$my
 			require => [File["/etc/mysql/conf.d/tunning.cnf"]],
 			refreshonly => true,
 			}
-		}	    
     }
 
 	service { mysql:
