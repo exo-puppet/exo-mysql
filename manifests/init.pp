@@ -24,12 +24,14 @@ class mysql::server ($mysql_data_dir="/var/lib/mysql",$mysql_tunning="false",$my
 			command => "mv /var/lib/mysql/mysql $mysql_data_dir", 
 			require => [File["$mysql_data_dir"]],
 			onlyif => "test ! -d $mysql_data_dir/mysql",
+			refreshonly => true,
 		}
 		# Rename the original directory
 		exec{"rename-mysql-dir":
 			command => "mv /var/lib/mysql /var/lib/mysql.ori",
 			onlyif => "test (! -h /var/lib/mysql) -a (-d /var/lib/mysql) -a (! -d /var/lib/mysql.ori)", 
 			require => [Exec["move-mysql-db"]],
+			refreshonly => true,
 		}		
 		# Create a symlink
 		file {"/var/lib/mysql":
@@ -85,6 +87,8 @@ class mysql::server ($mysql_data_dir="/var/lib/mysql",$mysql_tunning="false",$my
 		exec{"remove-log":
 			command => "rm $mysql_data_dir/ib_logfile*",
 			require => [File["/etc/mysql/conf.d/tunning.cnf"]],
+			refreshonly => true,
+			}
 		}	    
     }
 
