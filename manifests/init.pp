@@ -16,6 +16,7 @@ class mysql::server ($mysql_data_dir="/var/lib/mysql",$mysql_tunning="false",$my
             ensure => directory,
             owner   => mysql,
             group   => mysql,
+            recurse => true,
 			require => [Package["mysql-server"]],
         }		
 		# Move the mysql database
