@@ -1,0 +1,7 @@
+[client]
+host                  = <%= scope.lookupvar('mysql::bind_address') %>
+port                  = <%= scope.lookupvar('mysql::port') %>
+user                  = root
+password              = <%= scope.lookupvar('mysql::params::mysql_root_password') %>
+socket                = <%= scope.lookupvar('mysql::params::sock_path') %>
+default-character-set = <%= scope.lookupvar('mysql::server_charset') %>

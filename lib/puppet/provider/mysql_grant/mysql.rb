@@ -11,21 +11,25 @@ MYSQL_USER_PRIVS = [ :select_priv, :insert_priv, :update_priv, :delete_priv,
 	:show_db_priv, :super_priv, :create_tmp_table_priv, :lock_tables_priv,
 	:execute_priv, :repl_slave_priv, :repl_client_priv, :create_view_priv,
 	:show_view_priv, :create_routine_priv, :alter_routine_priv,
-	:create_user_priv
-]
+	:create_user_priv, :trigger_priv, :event_priv
+].sort!
 
-MYSQL_DB_PRIVS = [ :select_priv, :insert_priv, :update_priv, :delete_priv,
+#puts [ "mysql user privs = ", MYSQL_USER_PRIVS.join(', ') ].join
+
+  MYSQL_DB_PRIVS = [ :select_priv, :insert_priv, :update_priv, :delete_priv,
 	:create_priv, :drop_priv, :grant_priv, :references_priv, :index_priv,
 	:alter_priv, :create_tmp_table_priv, :lock_tables_priv, :create_view_priv,
 	:show_view_priv, :create_routine_priv, :alter_routine_priv, :execute_priv
-]
+].sort!
+
+#puts [ "mysql db privs = ", MYSQL_DB_PRIVS.join(', ') ].join
 
 Puppet::Type.type(:mysql_grant).provide(:mysql) do
 
 	desc "Uses mysql as database."
 
-	commands :mysql => '/usr/bin/mysql'
-	commands :mysqladmin => '/usr/bin/mysqladmin'
+  optional_commands :mysql => '/usr/bin/mysql'
+  optional_commands :mysqladmin => '/usr/bin/mysqladmin'
 
 	def munge_args(*args)
 		@resource[:defaults] ||= ""
@@ -84,7 +88,7 @@ Puppet::Type.type(:mysql_grant).provide(:mysql) do
 	def destroy
 		do_mysql "mysql", "-e", "REVOKE ALL ON '%s'.* FROM '%s@%s'" % [ @resource[:privileges], @resource[:database], @resource[:name], @resource[:host] ]
 	end
-	
+
 	def row_exists?
 		name = split_name(@resource[:name])
 		fields = [:user, :host]
@@ -102,8 +106,11 @@ Puppet::Type.type(:mysql_grant).provide(:mysql) do
 				MYSQL_DB_PRIVS
 		end
 		all_privs = all_privs.collect do |p| p.to_s end.sort.join("|")
+#    puts [ "mysql_grant : all_privs = ", all_privs ].join
 		privs = privileges.collect do |p| p.to_s end.sort.join("|")
+#    puts [ "mysql_grant : privs     = ", privs ].join
 
+#    puts [ "mysql_grant : are privileges equals ? ", (all_privs == privs) ].join
 		all_privs == privs
 	end
 
@@ -155,7 +162,7 @@ Puppet::Type.type(:mysql_grant).provide(:mysql) do
 		if privs[0] == :all 
 			privs = all_privs
 		end
-	
+
 		# puts "stmt:", stmt
 		set = all_privs.collect do |p| "%s = '%s'" % [p, privs.include?(p) ? 'Y' : 'N'] end.join(', ')
 		# puts "set:", set

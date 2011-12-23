@@ -1,0 +1,221 @@
+# The MySQL database server configuration file.
+#
+# You can copy this to one of:
+# - "/etc/mysql/my.cnf" to set global options,
+# - "~/.my.cnf" to set user-specific options.
+#
+# One can use all long options that the program supports.
+# Run program with --help to get a list of available options and with
+# --print-defaults to see which it would actually understand and use.
+#
+# For explanations see
+# http://dev.mysql.com/doc/mysql/en/server-system-variables.html
+
+# This will be passed to all mysql clients
+# It has been reported that passwords should be enclosed with ticks/quotes
+# escpecially if they contain "#" chars...
+# Remember to edit /etc/mysql/debian.cnf when changing the socket location.
+[client]
+port                  = <%= scope.lookupvar('mysql::port') %>
+socket                = <%= scope.lookupvar('mysql::params::sock_path') %>
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_character_set_client
+#character_set_client      = utf8
+default-character-set = <%= scope.lookupvar('mysql::server_charset') %>
+
+# Here is entries for some specific programs
+# The following values assume you have at least 32M ram
+
+# This was formally known as [safe_mysqld]. Both versions are currently parsed.
+[mysqld_safe]
+socket          = <%= scope.lookupvar('mysql::params::sock_path') %>
+nice            = 0
+
+[mysqld]
+################################################################################
+# * Basic Settings
+################################################################################
+#
+# * IMPORTANT
+#   If you make changes to these settings and your system uses apparmor, you may
+#   also need to also adjust /etc/apparmor.d/usr.sbin.mysqld.
+#
+
+user            = <%= scope.lookupvar('mysql::params::mysql_user') %>
+socket          = <%= scope.lookupvar('mysql::params::sock_path') %>
+port            = <%= scope.lookupvar('mysql::port') %>
+basedir         = /usr
+datadir         = <%= scope.lookupvar('mysql::params::db_data_dir') %>
+tmpdir          = <%= scope.lookupvar('mysql::params::temp_dir') %>
+skip-external-locking
+#
+# Instead of skip-networking the default is now to listen only on
+# localhost which is more compatible and is not less secure.
+bind-address            = <%= scope.lookupvar('mysql::bind_address') %>
+
+default-storage-engine  = <%= scope.lookupvar('mysql::default_storage_engine') %>
+
+# http://dev.mysql.com/doc/refman/5.1/en/server-options.html#option_mysqld_transaction-isolation
+transaction-isolation   = READ-COMMITTED
+
+################################################################################
+# * Encoding
+################################################################################
+
+default-character-set     = <%= scope.lookupvar('mysql::server_charset') %>
+character-set-server      = <%= scope.lookupvar('mysql::server_charset') %>
+collation-server          = <%= scope.lookupvar('mysql::server_collation') %>
+
+################################################################################
+# * Connections Configuration
+################################################################################
+max_connections       = <%= scope.lookupvar('mysql::max_connections') %>
+max_user_connections  = <%= scope.lookupvar('mysql::max_user_connections') %>
+
+#
+# * Fine Tuning
+#
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_read_buffer_size
+read_buffer_size      = <%= scope.lookupvar('mysql::read_buffer_size') %>
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_read_rnd_buffer_size
+read_rnd_buffer_size  = <%= scope.lookupvar('mysql::read_rnd_buffer_size') %>
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_sort_buffer_size
+sort_buffer_size      = <%= scope.lookupvar('mysql::sort_buffer_size') %>
+
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_table_open_cache
+table_open_cache      = <%= scope.lookupvar('mysql::table_open_cache') %>
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_thread_cache_size
+thread_cache_size     = <%= scope.lookupvar('mysql::thread_cache_size') %>
+
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_tmp_table_size
+# tmp_table_size
+
+################################################################################
+# * Query Cache Configuration
+################################################################################
+
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_query_cache_type
+query_cache_type        = 1
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_query_cache_limit
+query_cache_limit       = <%= scope.lookupvar('mysql::query_cache_limit') %>
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_query_cache_size
+query_cache_size        = <%= scope.lookupvar('mysql::query_cache_size') %>
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_query_cache_min_res_unit
+query_cache_min_res_unit= 4K
+
+################################################################################
+# * Fine Tuning
+################################################################################
+
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_key_buffer_size
+key_buffer_size         = <%= scope.lookupvar('mysql::key_buffer_size') %>
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_join_buffer_size
+join_buffer_size        = <%= scope.lookupvar('mysql::join_buffer_size') %>
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_max_allowed_packet
+max_allowed_packet      = <%= scope.lookupvar('mysql::max_allowed_packet') %>
+
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_tmp_table_size
+table_open_cache        = <%= scope.lookupvar('mysql::table_open_cache') %>
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_max_tmp_tables
+max_tmp_tables          = <%= scope.lookupvar('mysql::max_tmp_tables') %>
+
+################################################################################
+# * InnoDB
+################################################################################
+
+# http://dev.mysql.com/doc/refman/5.1/en/innodb-parameters.html#sysvar_innodb_file_per_table
+innodb_file_per_table           = <%= scope.lookupvar('mysql::innodb_file_per_table') == true ? "1" : "0" %>
+# Set buffer pool size to 50-80% of your computer's memory,
+# but make sure on Linux x86 total memory usage is < 2GB
+# http://dev.mysql.com/doc/refman/5.1/en/innodb-parameters.html#sysvar_innodb_buffer_pool_size
+innodb_buffer_pool_size         = <%= scope.lookupvar('mysql::innodb_buffer_pool_size') %>
+# http://dev.mysql.com/doc/refman/5.1/en/innodb-parameters.html#sysvar_innodb_thread_concurrency
+innodb_thread_concurrency       = <%= scope.lookupvar('mysql::innodb_thread_concurrency') %>
+# http://dev.mysql.com/doc/refman/5.1/en/innodb-parameters.html#sysvar_innodb_flush_method
+innodb_flush_method             = <%= scope.lookupvar('mysql::innodb_flush_method') %>
+# http://dev.mysql.com/doc/refman/5.1/en/innodb-parameters.html#sysvar_innodb_flush_log_at_trx_commit
+innodb_flush_log_at_trx_commit  = <%= scope.lookupvar('mysql::innodb_flush_log_at_trx_commit') %>
+# 
+innodb_lock_wait_timeout        = <%= scope.lookupvar('mysql::innodb_lock_wait_timeout') %>
+innodb_rollback_on_timeout      = <%= scope.lookupvar('mysql::innodb_rollback_on_timeout') == true ? "1" : "0"  %>
+
+# http://dev.mysql.com/doc/refman/5.1/en/innodb-parameters.html#sysvar_innodb_additional_mem_pool_size
+innodb_additional_mem_pool_size = <%= scope.lookupvar('mysql::innodb_additional_mem_pool_size') %>
+# http://dev.mysql.com/doc/refman/5.1/en/innodb-parameters.html#sysvar_innodb_doublewrite
+innodb_doublewrite              = 1
+
+
+# Set the log file size to about 25% of the buffer pool size
+# http://dev.mysql.com/doc/refman/5.1/en/innodb-parameters.html#sysvar_innodb_log_file_size
+innodb_log_file_size            = <%= scope.lookupvar('mysql::innodb_log_file_size') %>
+# http://dev.mysql.com/doc/refman/5.1/en/innodb-parameters.html#sysvar_innodb_log_buffer_size
+innodb_log_buffer_size          = <%= scope.lookupvar('mysql::innodb_log_buffer_size') %>
+# http://dev.mysql.com/doc/refman/5.1/en/innodb-parameters.html#sysvar_innodb_data_file_path
+innodb_data_file_path           = <%= scope.lookupvar('mysql::innodb_data_file_path') %>
+
+################################################################################
+# * MyISAM
+################################################################################
+
+# This replaces the startup script and checks MyISAM tables if needed
+# the first time they are touched
+myisam-recover        = BACKUP
+# http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_bulk_insert_buffer_size
+bulk_insert_buffer_size = <%= scope.lookupvar('mysql::bulk_insert_buffer_size') %>
+
+################################################################################
+# * Logging and Replication and Debuging
+################################################################################
+
+# Both location gets rotated by the cronjob.
+# Be aware that this log type is a performance killer.
+# As of 5.1 you can enable the log at runtime!
+#general_log_file        = /var/log/mysql/mysql.log
+#general_log             = 1
+log_error                = /var/log/mysql/error.log
+
+# http://dev.mysql.com/doc/refman/5.1/en/server-options.html#option_mysqld_slow-query-log
+slow_query_log                = <%= scope.lookupvar('mysql::slow_query_log') == true ? "1" : "0" %>
+long_query_time               = <%= scope.lookupvar('mysql::long_query_time')  %>
+# http://dev.mysql.com/doc/refman/5.1/en/server-options.html#option_mysqld_log-queries-not-using-indexes
+log_queries_not_using_indexes = <%= scope.lookupvar('mysql::log_queries_not_using_indexes') == true ? "1" : "0" %>
+
+# The following can be used as easy to replay backup logs or for replication.
+# note: if you are setting up a replication slave, see README.Debian about
+#       other settings you may need to change.
+#server-id              = 1
+
+#log_bin                        = /var/log/mysql/mysql-bin.log
+expire_logs_days        = 10
+max_binlog_size         = 100M
+#binlog_do_db           = include_database_name
+#binlog_ignore_db       = include_database_name
+
+################################################################################
+# * Security Features
+################################################################################
+#
+# Read the manual, too, if you want chroot!
+# chroot = <%= scope.lookupvar('mysql::params::db_data_dir') %>
+#
+# For generating SSL certificates I recommend the OpenSSL GUI "tinyca".
+#
+# ssl-ca=/etc/mysql/cacert.pem
+# ssl-cert=/etc/mysql/server-cert.pem
+# ssl-key=/etc/mysql/server-key.pem
+
+[mysqldump]
+quick
+quote-names
+max_allowed_packet      = <%= scope.lookupvar('mysql::max_allowed_packet') %>
+
+[mysql]
+#no-auto-rehash # faster start of mysql but no tab completition
+
+[isamchk]
+key_buffer              = 16M
+
+#
+# * IMPORTANT: Additional settings that can override those from this file!
+#   The files must end with '.cnf', otherwise they'll be ignored.
+#
+!includedir /etc/mysql/conf.d/

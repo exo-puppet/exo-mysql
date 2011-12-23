@@ -1,0 +1,6 @@
+# Site-specific additions and overrides for usr.sbin.mysqld.
+# For more details, please see /etc/apparmor.d/local/README.
+# WARNING : this file is manage by Puppet : don't change it by hand or it will be erased 
+
+<%= scope.lookupvar('mysql::params::db_data_dir') %>/ r,
+<%= scope.lookupvar('mysql::params::db_data_dir') %>/** rwk,
