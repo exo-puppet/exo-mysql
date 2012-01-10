@@ -45,7 +45,7 @@ class mysql::install {
     #########################################
     # specific stuff when mysql datadir is not the standard one
     #########################################
-    if ( "$mysql::data_dir" != "$mysql::params::standard_db_data_dir" ) {
+    if ( "$mysql::params::db_data_dir" != "$mysql::params::standard_db_data_dir" ) {
         Exec { path => "/bin:/sbin:/usr/bin:/usr/sbin" }
         # the required directory must exists
         file { "specific-/var/lib/mysql":
