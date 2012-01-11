@@ -17,7 +17,7 @@
 # [+data_dir+]
 #   (OPTIONAL) (default: $mysql::params::standard_db_data_dir) 
 #   
-#   this variable allow to chose where the database data will be installed.
+#   this variable allow to choose where the database data will be installed.
 #
 # [+max_connections+]
 #   (OPTIONAL) (default: 64) 
