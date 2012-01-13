@@ -1,3 +1,8 @@
+# ###################################
+# This file is managed by puppet
+# PLEASE DON'T MODIFY BY HAND
+# ###################################
+
 [client]
 host                  = <%= scope.lookupvar('mysql::bind_address') %>
 port                  = <%= scope.lookupvar('mysql::port') %>
