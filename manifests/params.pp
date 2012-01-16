@@ -52,7 +52,11 @@ class mysql::params {
 						default	=> $mysql::data_dir,
 					}
 					
-                    $mysql_root_password        = mysql_root_password("${mysql::params::config_dir_user_root}/${mysql::params::config_file_user_root}")
+#                    $mysql_root_password        = mysql_root_password("${mysql::params::config_dir_user_root}/${mysql::params::config_file_user_root}")
+                    $mysql_root_password        = $::mysql_root_password ? {
+                        "false" => mysql_random_password(16),
+                        default => $::mysql_root_password,
+                    }
                     info ("MySQL root password from params : [$mysql_root_password]")
 
                     
