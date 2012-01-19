@@ -13,7 +13,7 @@ class mysql::params {
 
 	case $::operatingsystem {
 		/(Ubuntu)/: {
-			case $::operatingsystemrelease {
+			case $::lsbdistrelease {
 				/(10.04|10.10|11.04)/: {
                     $package_name               = "mysql-server-5.1"
                     $additional_package_name    = [ "mysqltuner" ]
