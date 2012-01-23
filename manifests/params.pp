@@ -34,7 +34,7 @@ class mysql::params {
                     
                     $temp_dir                   = $mysql::temp_dir ? {
                         false   => "/tmp",
-                        default => $mysql::sock_path,
+                        default => $mysql::temp_dir,
                     }
                     
                     $config_dir_user_root       = "/root"

@@ -4,3 +4,5 @@
 
 <%= scope.lookupvar('mysql::params::db_data_dir') %>/ r,
 <%= scope.lookupvar('mysql::params::db_data_dir') %>/** rwk,
+<%= scope.lookupvar('mysql::params::temp_dir') %>/ r,
+<%= scope.lookupvar('mysql::params::temp_dir') %>/** rwk,
