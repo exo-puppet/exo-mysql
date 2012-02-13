@@ -57,19 +57,19 @@ class mysql::install {
 #            recurse => true,
             require => Repo::Package [ "mysql" ],
             notify  => [ Class["mysql::service"] ],
-        } 
+        } -> 
         exec {"copy-mysql-data":
-            command     => "cp -rp ${mysql::params::standard_db_data_dir}/* ${mysql::params::db_data_dir}/", 
+            command     => "service mysql stop; cp -rp ${mysql::params::standard_db_data_dir}/* ${mysql::params::db_data_dir}/", 
             unless      => "test -d ${mysql::params::db_data_dir}/mysql",
             notify      => [ Class["mysql::service"] ],
             require     => File [ "specific-/var/lib/mysql" ],
-        }
+        } -> 
         exec { "rename-old-mysql-data":
             command     => "mv ${mysql::params::standard_db_data_dir} ${mysql::params::standard_db_data_dir}-ORI",
             unless      => "test -h ${mysql::params::standard_db_data_dir} -o ! -d ${mysql::params::standard_db_data_dir} -o -d ${mysql::params::standard_db_data_dir}-ORI",
             notify      => [ File [ "symlink-/var/lib/mysql" ], Class["mysql::service"] ],
             require     => Exec [ "copy-mysql-data" ],
-        } 
+        } -> 
         # Create a symlink
         file {"symlink-/var/lib/mysql":
             path    => $mysql::params::standard_db_data_dir,
