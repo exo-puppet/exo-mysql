@@ -33,7 +33,7 @@ class mysql::install {
     #########################################
     repo::package { "mysql":
         pkg     => $mysql::params::package_name,
-        preseed => template("mysql/mysql-server-5.1.preseed.erb"),
+        preseed => template("mysql/mysql-server.preseed.erb"),
         require => File [ "/etc/mysql", "root-my.cnf" ],
     }
 

@@ -1,0 +1,7 @@
+# ###################################
+# This file is managed by puppet
+# PLEASE DON'T MODIFY BY HAND
+# ###################################
+<%= scope.lookupvar('mysql::params::package_name') %>  mysql-server/root_password  password  <%= scope.lookupvar('mysql::params::mysql_root_password') %>
+<%= scope.lookupvar('mysql::params::package_name') %>  mysql-server/root_password_again  password  <%= scope.lookupvar('mysql::params::mysql_root_password') %>
+<%= scope.lookupvar('mysql::params::package_name') %>  <%= scope.lookupvar('mysql::params::package_name') %>/start_on_boot  boolean true
