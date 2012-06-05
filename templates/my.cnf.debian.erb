@@ -25,7 +25,6 @@ port                  = <%= scope.lookupvar('mysql::port') %>
 socket                = <%= scope.lookupvar('mysql::params::sock_path') %>
 # http://dev.mysql.com/doc/refman/5.1/en/server-system-variables.html#sysvar_character_set_client
 #character_set_client      = utf8
-default-character-set = <%= scope.lookupvar('mysql::server_charset') %>
 
 # Here is entries for some specific programs
 # The following values assume you have at least 32M ram
