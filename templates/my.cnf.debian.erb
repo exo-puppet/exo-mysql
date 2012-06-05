@@ -65,7 +65,6 @@ transaction-isolation   = READ-COMMITTED
 # * Encoding
 ################################################################################
 
-default-character-set     = <%= scope.lookupvar('mysql::server_charset') %>
 character-set-server      = <%= scope.lookupvar('mysql::server_charset') %>
 collation-server          = <%= scope.lookupvar('mysql::server_collation') %>
 
