@@ -51,7 +51,7 @@ Puppet::Type.type(:mysql_database).provide(:mysql,
   end
 
   def create
-    mysqladmin munge_args("create", @resource[:name])
+    mysql munge_args("-e", "CREATE DATABASE IF NOT EXISTS "+@resource[:name]+" "+@resource[:create_options]+";")
   end
 
   def destroy
