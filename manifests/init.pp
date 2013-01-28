@@ -33,7 +33,7 @@
 # [+bind_address+]
 #   (OPTIONAL) (default: 127.0.0.1) 
 #   
-#   this variable allow to define on which addresse to bind mysql
+#   this variable allow to define on which address to bind mysql
 #
 # [+port+]
 #   (OPTIONAL) (default: 3306) 
@@ -53,7 +53,7 @@
 # [+default_storage_engine+]
 #   (OPTIONAL) (default: INNODB) 
 #   
-#   this variable allow to change the default storage engine ( [ INNODB | MYISAMÊ] )  
+#   this variable allow to change the default storage engine ( [ INNODB | MYISAM ] )  
 #
 # [+innodb_file_per_table+]
 #   (OPTIONAL) (default: true) 
