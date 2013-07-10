@@ -7,10 +7,10 @@ module Puppet::Parser::Functions
     Puppet::Parser::Functions.autoloader.loadall
     cmd = [ "free -o -b" , "| grep -i 'mem:' | sed 's/[a-z:]\\+ \\+//ig' | sed 's/ \\+/:/g' | cut -d: -f1" ].join( " " )
     puts ["sys_memory() cmd line = ", cmd].join
-      
+
     memory = IO.popen([cmd].join(" ")).readline
     memory = memory.strip
-    
+
     puts [ "System Memory (bytes) = [", memory, "]" ].join
 
     memory

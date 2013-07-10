@@ -14,7 +14,7 @@ Puppet::Type.newtype(:mysql_database) do
 
     # TODO: only valid paths allowed
   end
-  
+
   newparam(:create_options) do
     desc "Additional options to pass to CREATE DATABASE"
     defaultto ""

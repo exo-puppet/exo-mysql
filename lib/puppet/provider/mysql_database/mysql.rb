@@ -1,20 +1,19 @@
 require 'puppet/provider/package'
 
 Puppet::Type.type(:mysql_database).provide(:mysql,
-    :parent => Puppet::Provider::Package) do
+:parent => Puppet::Provider::Package) do
 
   desc "Use mysql as database."
   optional_commands :mysqladmin  => '/usr/bin/mysqladmin'
   optional_commands :mysql       => '/usr/bin/mysql'
-
   # retrieve the current set of mysql databases
   def self.instances
     dbs = []
 
-    if Facter["mysql_exists"].value 
+    if Facter["mysql_exists"].value
       # FIXME : this command only work for Debian or Ubuntu systems
       cmd = "/usr/bin/mysql --defaults-file=/etc/mysql/debian.cnf mysql -NBe 'show databases'"
-  
+
       execpipe(cmd) do |process|
         process.each do |line|
           dbs << new( { :ensure => :present, :name => line.chomp } )
@@ -23,10 +22,10 @@ Puppet::Type.type(:mysql_database).provide(:mysql,
     end
     return dbs
   end
-  
+
   def munge_args(*args)
     @resource[:defaults] ||= ""
-    if @resource[:defaults] != "" 
+    if @resource[:defaults] != ""
       [ "--defaults-file="+@resource[:defaults] ] + args
     else
       args

@@ -10,7 +10,7 @@ module Puppet::Parser::Functions
     # Explicit loading of all puppet custom functions to have mysql_random_password
     # see : http://docs.puppetlabs.com/guides/custom_functions.html#calling-functions-from-functions
     Puppet::Parser::Functions.autoloader.loadall
-    
+
     sys_memory = function_sys_memory().to_i
     #puts [ "mysql_max_buffer_to_use:", "sys_memory=", sys_memory ].join(' ')
     memory = sys_memory * 70 / 100

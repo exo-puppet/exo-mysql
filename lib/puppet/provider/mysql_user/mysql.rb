@@ -1,22 +1,21 @@
 require 'puppet/provider/package'
 
 Puppet::Type.type(:mysql_user).provide(:mysql,
-    # T'is funny business, this code is quite generic
-    :parent => Puppet::Provider::Package) do
+# T'is funny business, this code is quite generic
+:parent => Puppet::Provider::Package) do
 
   desc "Use mysql as database."
   optional_commands :mysql => '/usr/bin/mysql'
   optional_commands :mysqladmin => '/usr/bin/mysqladmin'
-
   # retrieve the current set of mysql users
   def self.instances
     users = []
-      
-    if Facter["mysql_exists"].value 
+
+    if Facter["mysql_exists"].value
       # FIXME : this command only work for Debian or Ubuntu systems
       cmd = "/usr/bin/mysql --defaults-file=/etc/mysql/debian.cnf mysql -NBe 'select concat(user, \"@\", host), password from user'"
-        
-#      puts [ "mysql_user cmd : ", cmd ].join
+
+      #      puts [ "mysql_user cmd : ", cmd ].join
       execpipe(cmd) do |process|
         process.each do |line|
           users << new( query_line_to_hash(line) )
@@ -26,7 +25,7 @@ Puppet::Type.type(:mysql_user).provide(:mysql,
 
     return users
   end
-  
+
   def self.query_line_to_hash(line)
     fields = line.chomp.split(/\t/)
     {
@@ -38,14 +37,14 @@ Puppet::Type.type(:mysql_user).provide(:mysql,
 
   def munge_args(*args)
     @resource[:defaults] ||= ""
-    if @resource[:defaults] != "" 
+    if @resource[:defaults] != ""
       [ "--defaults-file="+@resource[:defaults] ] + args
     else
       args
     end
   end
 
-  def mysql_flush 
+  def mysql_flush
     mysqladmin munge_args("flush-privileges")
   end
 
@@ -57,7 +56,7 @@ Puppet::Type.type(:mysql_user).provide(:mysql,
       process.each do |line|
         unless result.empty?
           raise Puppet::Error,
-            "Got multiple results for user '%s'" % @resource[:name]
+          "Got multiple results for user '%s'" % @resource[:name]
         end
         result = query_line_to_hash(line)
       end

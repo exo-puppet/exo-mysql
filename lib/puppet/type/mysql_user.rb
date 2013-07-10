@@ -18,10 +18,10 @@ Puppet::Type.newtype(:mysql_user) do
 
   # Autorequire the nearest ancestor directory found in the catalog.
   # Taken from puppet/type/file in the puppet source
-#  autorequire(:file) do
-#    [ "/etc/mysql" ]
-#  end
-  
+  #  autorequire(:file) do
+  #    [ "/etc/mysql" ]
+  #  end
+
   autorequire(:class) do
     [ "mysql::params" ]
   end
