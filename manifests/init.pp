@@ -3,6 +3,7 @@
 # This module manages the mysql 5.1 or 5.5 service.
 #
 #   Tested platforms:
+#    - Ubuntu 14.04 Trusty Tahr
 #    - Ubuntu 12.04 Precise Pangolin
 #    - Ubuntu 11.10 Oneiric
 #    - Ubuntu 11.04 Natty

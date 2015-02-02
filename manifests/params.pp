@@ -12,12 +12,12 @@ class mysql::params {
   case $::operatingsystem {
     /(Ubuntu)/: {
       case $::lsbdistrelease {
-        /(10.04|10.10|11.04|11.10|12.04)/: {
+        /(10.04|10.10|11.04|11.10|12.04|14.04)/: {
           case $::lsbdistrelease {
             /(10.04|10.10|11.04|11.10)/: {
               $package_name               = 'mysql-server-5.1'
             }
-            /(12.04)/: {
+            /(12.04|14.04)/: {
               $package_name               = 'mysql-server-5.5'
             }
           }
