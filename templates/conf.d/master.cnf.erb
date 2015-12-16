@@ -10,5 +10,6 @@
 server_id           = <%= scope.lookupvar('mysql::server_id') %>
 log-bin             = <%= scope.lookupvar('mysql::params::logbin_basename') %>
 binlog_format       = <%= scope.lookupvar('mysql::binlog_format') %>
+max_binlog_size     = <%= scope.lookupvar('mysql::max_binlog_size') %>
 sync_binlog         = <%= scope.lookupvar('mysql::sync_binlog') %> 
 expire_logs_days    = <%= scope.lookupvar('mysql::expire_logs_days') %>

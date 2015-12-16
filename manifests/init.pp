@@ -431,6 +431,12 @@
 #   For more informations, read :
 #   * http://dev.mysql.com/doc/refman/5.5/en/server-system-variables.html#sysvar_expire_logs_days
 #
+# [+max_binlog_size+]
+#   (OPTIONAL) (default: 512m)
+#
+#   For more informations, read :
+#   * https://dev.mysql.com/doc/refman/5.5/en/replication-options-binary-log.html#sysvar_max_binlog_size
+#
 # == Modules Dependencies
 #
 # [+repo+]
@@ -501,6 +507,7 @@ class mysql (
   $enable_master         = false,
   $server_id             = 0,
   $binlog_format         = 'MIXED',
+  $max_binlog_size       = '512m',
   $sync_binlog           = 1,
   $expire_logs_days      = 0,
   #$replicated_dbs        = [],
