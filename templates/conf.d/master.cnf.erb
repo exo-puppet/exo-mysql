@@ -1,0 +1,14 @@
+# ###################################
+# This file is managed by puppet
+# PLEASE DON'T MODIFY BY HAND
+# ###################################
+
+[mysqld]
+################################################################################
+# * Replication Features
+################################################################################
+server_id           = <%= scope.lookupvar('mysql::server_id') %>
+log-bin             = <%= scope.lookupvar('mysql::params::logbin_basename') %>
+binlog_format       = <%= scope.lookupvar('mysql::binlog_format') %>
+sync_binlog         = <%= scope.lookupvar('mysql::sync_binlog') %> 
+expire_logs_days    = <%= scope.lookupvar('mysql::expire_logs_days') %>

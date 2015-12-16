@@ -83,4 +83,6 @@ class mysql::params {
       fail ("The ${module_name} module is not supported on ${::operatingsystem}")
     }
   }
+
+  $logbin_basename = "${::hostname}-bin"
 }

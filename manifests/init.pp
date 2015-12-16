@@ -398,6 +398,39 @@
 #   * http://dev.mysql.com/doc/refman/5.1/en/charset-configuration.html
 #   * http://dev.mysql.com/doc/refman/5.1/en/server-options.html#option_mysqld_collation-server
 #
+# [+enable_master+]
+#   (OPTIONAL) (default: false)
+#
+#   This variable install the configuration files to prepare a master-slave replication
+#
+#   For more informations, read :
+#   * http://dev.mysql.com/doc/refman/5.5/en/replication-options.html
+#
+# [+server_id+]
+#   (OPTIONAL) (default: 0)
+#
+#   For more informations, read :
+#   * http://dev.mysql.com/doc/refman/5.5/en/replication-options.html#option_mysqld_server-id
+#   * http://dev.mysql.com/doc/refman/5.5/en/server-system-variables.html#sysvar_server_id
+#
+# [+binlog_format+]
+#   (OPTIONAL) (default: MIXED)
+#
+#   For more informations, read :
+#   * http://dev.mysql.com/doc/refman/5.5/en/server-options.html#option_mysqld_binlog-format
+#
+# [+sync_binlog+]
+#   (OPTIONAL) (default: 1)
+#
+#   For more informations, read :
+#   * http://dev.mysql.com/doc/refman/5.5/en/replication-options-binary-log.html#sysvar_sync_binlog
+#
+# [+expire_logs_days+]
+#   (OPTIONAL) (default: 0)
+#
+#   For more informations, read :
+#   * http://dev.mysql.com/doc/refman/5.5/en/server-system-variables.html#sysvar_expire_logs_days
+#
 # == Modules Dependencies
 #
 # [+repo+]
@@ -463,7 +496,15 @@ class mysql (
   $long_query_time       = 10,
   $log_queries_not_using_indexes   = false,
   $server_charset        = 'utf8',
-  $server_collation      = 'utf8_general_ci') {
+  $server_collation      = 'utf8_general_ci',
+  # Replication configuration
+  $enable_master         = false,
+  $server_id             = 0,
+  $binlog_format         = 'MIXED',
+  $sync_binlog           = 1,
+  $expire_logs_days      = 0,
+  #$replicated_dbs        = [],
+  ) {
   # parameters validation
   if ($lastversion != true) and ($lastversion != false) {
     fail('lastversion must be true or false')
