@@ -1,0 +1,4 @@
+[mysqld]
+ssl-ca=<%= scope.lookupvar('mysql::ssl_ca') %>
+ssl-cert=<%= scope.lookupvar('mysql::ssl_cert') %>
+ssl-key=<%= scope.lookupvar('mysql::ssl_key') %>

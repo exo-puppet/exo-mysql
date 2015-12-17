@@ -50,6 +50,23 @@ class mysql::config {
       Class['mysql::service']],
   }
 
+  $install_ssl = $mysql::ssl_ca or $mysql::ssl_cert or $mysql::ssl_key
+
+  file { 'ssl.cnf' :
+    ensure  => $install_ssl ? {
+      true    => present,
+      default => absent,
+    },
+    path    => "${mysql::params::config_dir_extensions}/ssl.cnf",
+    owner   => root,
+    group   => root,
+    mode    => 0644,
+    content => template("mysql/conf.d/ssl.cnf.erb"),
+    require => Class['mysql::install'],
+    notify  => [
+      Class['mysql::service']],
+  }
+
   #    exec {"mysql-clean-logs":
   #        command     => "rm -f ${mysql::params::db_data_dir}/ib_logfile*",
   #        path        => "/bin:/sbin:/usr/bin:/usr/sbin",

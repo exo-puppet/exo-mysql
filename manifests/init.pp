@@ -512,6 +512,9 @@ class mysql (
   $sync_binlog           = 1,
   $expire_logs_days      = 0,
   $enable_slave          = false,
+  $ssl_ca                = undef,
+  $ssl_cert              = undef,
+  $ssl_key               = undef,
   ) {
   # parameters validation
   if ($lastversion != true) and ($lastversion != false) {
