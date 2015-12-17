@@ -508,9 +508,10 @@ class mysql (
   $server_id             = 0,
   $binlog_format         = 'MIXED',
   $max_binlog_size       = '512m',
+  $max_relay_log_size    = '512m',
   $sync_binlog           = 1,
   $expire_logs_days      = 0,
-  #$replicated_dbs        = [],
+  $enable_slave          = false,
   ) {
   # parameters validation
   if ($lastversion != true) and ($lastversion != false) {

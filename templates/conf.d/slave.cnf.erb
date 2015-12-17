@@ -1,0 +1,12 @@
+# ###################################
+# This file is managed by puppet
+# PLEASE DON'T MODIFY BY HAND
+# ###################################
+
+[mysqld]
+################################################################################
+# * Replication Features
+################################################################################
+server_id           = <%= scope.lookupvar('mysql::server_id') %>
+relay-log           = <%= scope.lookupvar('mysql::params::relaylog_basename') %>
+max_relay-log_size  = <%= scope.lookupvar('mysql::max_relay_log_size') %>

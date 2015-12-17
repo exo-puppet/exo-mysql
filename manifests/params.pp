@@ -85,4 +85,5 @@ class mysql::params {
   }
 
   $logbin_basename = "${::hostname}-bin"
+  $relaylog_basename  = "${::hostname}-relay-bin"
 }
