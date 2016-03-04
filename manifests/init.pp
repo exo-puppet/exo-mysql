@@ -484,6 +484,7 @@ class mysql (
   $innodb_log_file_size  = '32M',
   $innodb_log_buffer_size          = '5M',
   $innodb_data_file_path = 'ibdata1:10M:autoextend',
+  $innodb_buffer_pool_instances    = undef,
   $table_open_cache      = 64,
   $tmp_table_size        = '16M',
   $max_tmp_tables        = 32,

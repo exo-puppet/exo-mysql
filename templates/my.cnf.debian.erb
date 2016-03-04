@@ -154,6 +154,9 @@ innodb_log_file_size            = <%= scope.lookupvar('mysql::innodb_log_file_si
 innodb_log_buffer_size          = <%= scope.lookupvar('mysql::innodb_log_buffer_size') %>
 # http://dev.mysql.com/doc/refman/5.1/en/innodb-parameters.html#sysvar_innodb_data_file_path
 innodb_data_file_path           = <%= scope.lookupvar('mysql::innodb_data_file_path') %>
+<%- if scope.lookupvar('mysql::innodb_buffer_pool_instances') != :undef  -%>
+innodb_buffer_pool_instances   = <%= scope.lookupvar('mysql::innodb_buffer_pool_instances') %>
+<% end -%>
 
 ################################################################################
 # * MyISAM
