@@ -522,7 +522,7 @@ class mysql (
     fail('lastversion must be true or false')
   }
 
-  include repo
+  include stdlib
   include mysql::params, mysql::install, mysql::config, mysql::service, mysql::secure
 
 }

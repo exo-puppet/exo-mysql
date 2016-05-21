@@ -31,16 +31,22 @@ class mysql::install {
   #########################################
   # Install MySQL package
   #########################################
-  repo::package { 'mysql':
-    pkg     => $mysql::params::package_name,
-    preseed => template('mysql/mysql-server.preseed.erb'),
-    require => File['/etc/mysql', 'root-my.cnf'],
+  file { 'mysql-server.preseed':
+    ensure  => 'present',
+    path    => '/var/local/preseed/mysql-server.preseed',
+    mode    => 600,
+    backup  => false,
+    content => template('mysql/mysql-server.preseed.erb'),
+    require => File['/var/local/preseed'],
   }
 
-  package { $mysql::params::additional_package_name:
-    ensure  => present,
-    require => Repo::Package['mysql'],
-  }
+  ensure_packages ( 'mysql', {
+    'name'         => $mysql::params::package_name,
+    'responsefile' => '/var/local/preseed/mysql-server.preseed',
+    'require'      => [File['mysql-server.preseed','/etc/mysql','root-my.cnf'],Class['apt::update']],
+  } )
+
+  ensure_packages ( $mysql::params::additional_package_name, { 'require' => Package['mysql'] } )
 
   #########################################
   # specific stuff when mysql datadir is not the standard one
@@ -56,14 +62,12 @@ class mysql::install {
       group   => $mysql::params::mysql_group,
       mode    => 0700,
       #            recurse => true,
-      require => Repo::Package['mysql'],
-      notify  => [
-        Class['mysql::service']],
+      require => Package['mysql'],
+      notify  => [Class['mysql::service']],
     } -> exec { 'copy-mysql-data':
       command => "service mysql stop; cp -rp ${mysql::params::standard_db_data_dir}/* ${mysql::params::db_data_dir}/",
       unless  => "test -d ${mysql::params::db_data_dir}/mysql",
-      notify  => [
-        Class['mysql::service']],
+      notify  => [Class['mysql::service']],
       require => File['specific-/var/lib/mysql'],
     } -> exec { 'rename-old-mysql-data':
       command => "mv ${mysql::params::standard_db_data_dir} ${mysql::params::standard_db_data_dir}-ORI",
