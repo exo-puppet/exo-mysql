@@ -164,6 +164,9 @@ innodb_buffer_pool_instances   = <%= scope.lookupvar('mysql::innodb_buffer_pool_
 <%- if scope.lookupvar('mysql::innodb_large_prefix') != :undef  -%>
 innodb-large-prefix   = <%= scope.lookupvar('mysql::innodb_large_prefix') %>
 <% end -%>
+<%- if scope.lookupvar('mysql::innodb_file_format') != :undef  -%>
+innodb_file_format   = <%= scope.lookupvar('mysql::innodb_file_format') %>
+<% end -%>
 
 ################################################################################
 # * MyISAM

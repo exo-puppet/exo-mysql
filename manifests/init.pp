@@ -518,6 +518,7 @@ class mysql (
   $ssl_cert              = undef,
   $ssl_key               = undef,
   $default_time_zone     = undef,
+  $innodb_file_format    = undef,
   ) {
   # parameters validation
   if ($lastversion != true) and ($lastversion != false) {
