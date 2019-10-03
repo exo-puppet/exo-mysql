@@ -485,6 +485,7 @@ class mysql (
   $innodb_log_buffer_size          = '5M',
   $innodb_data_file_path = 'ibdata1:10M:autoextend',
   $innodb_buffer_pool_instances    = undef,
+  $innodb_large_prefix             = undef,
   $table_open_cache      = 64,
   $tmp_table_size        = '16M',
   $max_tmp_tables        = 32,
@@ -516,6 +517,7 @@ class mysql (
   $ssl_ca                = undef,
   $ssl_cert              = undef,
   $ssl_key               = undef,
+  $default_time_zone     = undef,
   ) {
   # parameters validation
   if ($lastversion != true) and ($lastversion != false) {

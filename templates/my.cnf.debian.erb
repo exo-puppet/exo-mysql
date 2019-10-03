@@ -61,6 +61,10 @@ default-storage-engine  = <%= scope.lookupvar('mysql::default_storage_engine') %
 # http://dev.mysql.com/doc/refman/5.1/en/server-options.html#option_mysqld_transaction-isolation
 transaction-isolation   = READ-COMMITTED
 
+<%- if scope.lookupvar('mysql::default_time_zone') != :undef  -%>
+default-time-zone   = <%= scope.lookupvar('mysql::default_time_zone') %>
+<% end -%>
+
 ################################################################################
 # * Encoding
 ################################################################################
@@ -156,6 +160,9 @@ innodb_log_buffer_size          = <%= scope.lookupvar('mysql::innodb_log_buffer_
 innodb_data_file_path           = <%= scope.lookupvar('mysql::innodb_data_file_path') %>
 <%- if scope.lookupvar('mysql::innodb_buffer_pool_instances') != :undef  -%>
 innodb_buffer_pool_instances   = <%= scope.lookupvar('mysql::innodb_buffer_pool_instances') %>
+<% end -%>
+<%- if scope.lookupvar('mysql::innodb_large_prefix') != :undef  -%>
+innodb-large-prefix   = <%= scope.lookupvar('mysql::innodb_large_prefix') %>
 <% end -%>
 
 ################################################################################
